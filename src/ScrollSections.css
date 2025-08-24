@@ -1,44 +1,75 @@
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
   color: white;
   text-align: center;
-  overflow-x: hidden; /* prevent horizontal scroll */
+  overflow-x: hidden;
 }
 
+
 .section {
-  height: 100vh;             
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 3rem;
-  font-weight: bold;
   position: relative;
   overflow: hidden;
+  flex-direction: column;
+  text-align: center;
 }
 
-.section-1 {
-  background: #1f2937;
+/* Section backgrounds */
+.section-1 { background: #1f2937; }
+.section-2 { background: #ffffff; }
+.section-3 { background: #0f172a; }
+
+
+.section-content h5 {
+  margin: 0 0 10px 0;
+  color: #ffffff;
+  font-size: clamp(1rem, 2vw, 1.5rem); 
+}
+.section-content h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.5rem, 4vw, 3rem);
 }
 
-.section-2 {
-  background: #111827;
-}
-
-.section-3 {
-  background: #0f172a;
-}
-
-.scroll-text {
-  font-size: 5rem;
-  font-weight: bold;
+/* Scroll animation  */
+.text-container {
+  position: absolute;
+  width: 100%;
   display: flex;
-  gap: 2px;
-  flex-wrap: wrap; /* prevent overflow if screen small */
+  justify-content: center;
+  align-items: center;
+  will-change: transform;
 }
 
-.scroll-text span {
+/* Scroll text styling */
+.scroll-text {
+  font-family: 'LayGrotesk', sans-serif;
+  font-weight: bold;
+  color: #121212;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  font-size: clamp(2rem, 10vw, 8rem); 
+}
+
+.letter {
   display: inline-block;
-  white-space: pre;
+  will-change: transform, opacity;
+}
+
+
+@media (max-width: 500px) {
+  .section-content h5 { font-size: 1rem; }
+  .section-content h1 { font-size: 1.8rem; }
+  .scroll-text { font-size: 5rem; }
+}
+
+@media (min-width: 2000px) {
+  .scroll-text { font-size: 10vw; }
 }

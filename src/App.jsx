@@ -1,7 +1,8 @@
-import ThreeSections from "./ThreeSections";
+import MainPage from "./ThreeSections";
+
 
 export default function App() {
   return (
-   <ThreeSections />
+   <MainPage />
   );
 }
