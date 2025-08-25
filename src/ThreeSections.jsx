@@ -3,57 +3,63 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./ScrollSections.css";
 
-
 gsap.registerPlugin(ScrollTrigger);
 
 export default function ScrollSections() {
   const textRef = useRef(null);
+  const section2Ref = useRef(null);
 
   useEffect(() => {
-    const letters = textRef.current.querySelectorAll(".letter");
+    if (!textRef.current || !section2Ref.current) return;
 
-    //.outer for make changes
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: textRef.current, 
-        start: "center 80%",       
-        end: "top 2%",         
-        scrub: true,             
-        markers: true              
-      },
-    });
+    const ctx = gsap.context(() => {
+      const letters = textRef.current.querySelectorAll(".letter");
 
-    //.letters from right 
-    tl.fromTo(
-      letters,
-      {
-        x: () => window.innerWidth,     
-        y: (i) => (i % 2 === 0 ? -50 : 50), 
-        opacity: 0,                    
-        scale: 0.1                      
-      },
-      //.center
-      {
-        x: 0,       
-        y: 0,
-        opacity: 10, 
-        scale: 1,   
-        stagger: 0.01, 
-        duration: 0.58
-      }
-    )
-    //.letters from center to left
-    .to(letters, {
-      x: () => -window.innerWidth, 
-      y: 0,
-      opacity: 9,                  
-      scale: 0.5,                 
-      stagger: 0.01,
-      duration: 0.58,
-      ease: "power2.in"
-    });
+      // Initial state
+      gsap.set(textRef.current, { x: () => window.innerWidth });
+      gsap.set(letters, {
+        y: (i) => (i % 2 === 0 ? -80 : 80),
+        opacity: 0,
+      });
 
-    
+      // Timeline
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section2Ref.current,
+          start: "center 40%",       // start when section hits center
+          end: "+=400%",             // 🔥 big scroll distance = very slow
+          scrub: true,        
+          pin: true,                
+          markers: true,            
+          invalidateOnRefresh: true,
+        },
+      });
+
+      tl.to(textRef.current, {
+        x: () => window.innerWidth * 0.2,
+        ease: "none",
+      })
+        .to(
+          letters,
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.05,
+            ease: "power3.out",
+          },
+          "<"
+        )
+        .to(textRef.current, {
+          x: 0,
+          ease: "power2.out",
+        })
+        .to(textRef.current, {
+          x: () => -window.innerWidth,
+          ease: "power2.in",
+        });
+    }, section2Ref);
+
+    return () => ctx.revert();
   }, []);
 
   const text = "This is my task";
@@ -68,8 +74,8 @@ export default function ScrollSections() {
         </div>
       </section>
 
-      {/* Section 2: scroll animation */}
-      <section className="section section-2">
+      {/* Section 2 */}
+      <section ref={section2Ref} className="section section-2">
         <div className="text-container">
           <h1 ref={textRef} className="scroll-text">
             {text.split("").map((char, i) => (
